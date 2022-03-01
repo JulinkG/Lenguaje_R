@@ -1,0 +1,41 @@
+---
+title: "Técnicas de imputación"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r}
+OAXACA2 <- read_csv("OAXACA2.csv")
+```
+```{r}
+library(VIM)
+```
+
+```{r}
+names(OAXACA2)
+```
+
+```{r}
+aggr(OAXACA2, sortVars = T, prop = T, sortCombs = T, cex.lab = 1.5, cex.axis = .6, cex.numbers = 5, combined = F, gap=-.2)
+```
+
+
+```{r}
+info<- OAXACA2[ ,c("MUN.x","POBTOT.x","P_18YMAS","P_60YMAS","PNACENT","P3YM_HLI","P15YM_AN","P15YM_SE","GRAPROES","PEA","PSINDER","PCATOLICA","PROM_OCUP","VPH_PISOTI","VPH_S_ELEC","VPH_AGUAFV","VPH_NODREN","VPH_NDACMM","IRS","HOGJEF_F","HOGJEF_M","PORCENTAJE_DE_LA.POBLACIÓN_EN_POBREZA_EXTREMA_2015")]
+```
+
+```{r}
+cor(info[,-1])
+```
+
+```{r}
+library(mice)
+datos_imputados_regresion1<-mice(info[,-1],m = 5,maxit = 10,seed=2018, method="norm.predict",print = FALSE)
+#head(datos_imputados_regresion) #Datos imputados por regresion
+datos_completos_info <-mice::complete(datos_imputados_regresion1)
+head(datos_completos_info)# Datos completos imputados por regresion
+```
+
+
+
