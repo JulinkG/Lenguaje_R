@@ -5,16 +5,17 @@ output:
   html_notebook: default
 ---
 
+
+```{r}
+library(VIM)
+library(tidyverse)
+```
+
+
 ```{r}
 OAXACA2 <- read_csv("OAXACA2.csv")
 ```
-```{r}
-library(VIM)
-```
 
-```{r}
-names(OAXACA2)
-```
 
 ```{r}
 aggr(OAXACA2, sortVars = T, prop = T, sortCombs = T, cex.lab = 1.5, cex.axis = .6, cex.numbers = 5, combined = F, gap=-.2)
@@ -25,9 +26,15 @@ aggr(OAXACA2, sortVars = T, prop = T, sortCombs = T, cex.lab = 1.5, cex.axis = .
 info<- OAXACA2[ ,c("MUN.x","POBTOT.x","P_18YMAS","P_60YMAS","PNACENT","P3YM_HLI","P15YM_AN","P15YM_SE","GRAPROES","PEA","PSINDER","PCATOLICA","PROM_OCUP","VPH_PISOTI","VPH_S_ELEC","VPH_AGUAFV","VPH_NODREN","VPH_NDACMM","IRS","HOGJEF_F","HOGJEF_M","PORCENTAJE_DE_LA.POBLACIÓN_EN_POBREZA_EXTREMA_2015")]
 ```
 
+Quintando la primer columna que es el indicador del municipio no es un valor 
+
+La correlación del porcentaje de población en pobreza extrema genera NA por valores faltantes 
+
 ```{r}
 cor(info[,-1])
 ```
+
+Imputar con regresión la información 
 
 ```{r}
 library(mice)
@@ -37,5 +44,34 @@ datos_completos_info <-mice::complete(datos_imputados_regresion1)
 head(datos_completos_info)# Datos completos imputados por regresion
 ```
 
+
+
+```{r}
+cor(datos_completos_info[,-c(1,22)])
+```
+
+```{r}
+M<-cor(datos_completos_info[,-c(1,21)])
+```
+
+
+```{r}
+library(corrplot)
+corrplot(M,method = "circle")
+```
+
+```{r}
+library(corrplot)
+corrplot(M,method = "color")
+```
+
+```{r}
+library(corrplot)
+corrplot(M,method = "number")
+```
+
+```{r}
+corrplot(M,type="upper",order="hclust")
+```
 
 
